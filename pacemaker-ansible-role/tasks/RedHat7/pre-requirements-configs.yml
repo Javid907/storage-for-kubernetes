@@ -12,6 +12,7 @@
     - gfs2-utils
     - lvm2-cluster
     - dlm
+    - fence-agents-vmware-soap
 
 - name: Enable service pcsd
   systemd:
@@ -60,3 +61,8 @@
   file:
     state: absent
     path: /root/add_to_host_file.sh
+
+- name: Create your directory
+  file:
+    path: /{{ folder_name }}
+    state: directory
