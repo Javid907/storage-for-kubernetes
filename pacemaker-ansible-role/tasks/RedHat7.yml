@@ -1,0 +1,5 @@
+---
+- include: RedHat7/pre-requirements-configs.yml
+  when: inventory_hostname in groups['all_workers']
+- include: RedHat7/pacemaker_configuration.yml
+  when: inventory_hostname in groups['head_worker']

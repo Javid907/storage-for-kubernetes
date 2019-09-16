@@ -1,0 +1,62 @@
+---
+- name: Install Required Packages
+  yum:
+    name: "{{ packages }}"
+    state: latest
+  vars:
+    packages:
+    - pacemaker
+    - pcs
+    - psmisc
+    - lvm2-lockd
+    - gfs2-utils
+    - lvm2-cluster
+    - dlm
+
+- name: Enable service pcsd
+  systemd:
+    enabled: yes
+    name: pcsd
+    masked: no
+- name: Enable service corosync
+  systemd:
+    enabled: yes
+    name: corosync
+    masked: no
+- name: Enable service pacemaker
+  systemd:
+    enabled: yes
+    name: pacemaker
+    masked: no
+
+- name: Start service pcsd
+  systemd:
+    state: started
+    daemon_reload: yes
+    name: pcsd
+
+- name: Change password for hacluster
+  user:
+    name: hacluster
+    update_password: always
+    password: "{{ password_hash }}"
+
+- name: Disable service lvm2-lvmetad
+  command: sudo systemctl disable lvm2-lvmetad --now
+
+- name: Enable clustered-locking set locking_type=3 in lvm.conf
+  command: sudo lvmconf --enable-cluster
+
+- name: Add line to hosts file
+  template:
+    src: add_to_host_file.j2
+    dest: /root/add_to_host_file.sh
+    mode: 0755
+
+- name: Run hosts file script
+  shell: sudo bash /root/add_to_host_file.sh
+
+- name: Remove hosts file script
+  file:
+    state: absent
+    path: /root/add_to_host_file.sh

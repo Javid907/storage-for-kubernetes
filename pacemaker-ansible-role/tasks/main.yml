@@ -1,0 +1,5 @@
+---
+- include: RedHat7.yml
+  when:
+    - ansible_distribution == 'CentOS' or ansible_distribution == 'RedHat'
+    - ansible_facts['distribution_major_version'] == "7"

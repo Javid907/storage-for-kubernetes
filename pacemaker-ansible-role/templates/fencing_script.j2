@@ -1,0 +1,6 @@
+#!/bin/bash
+
+for instance in {{ worker_list }}
+do
+   pcs stonith create vmfence_$instance fence_vmware_soap pcmk_host_map=$instance:$instance ipaddr={{ vcenter_ip }} ssl_insecure=1 login={{ vcenter_user }} passwd={{ vcenter_password }}
+done

@@ -1,0 +1,56 @@
+---
+- name: Add Nodes
+  command: sudo pcs cluster auth {{ worker_list }} -u {{ hacluster_user }} -p {{ hacluster_user_password }}
+
+- name: Create cluster
+  command: sudo pcs cluster setup --start --name  {{ cluster_name }} {{ worker_list }} --force
+
+- name: Copy fencing configuration script
+  template:
+    src: fencing_script.j2
+    dest: /root/fencing_script.sh
+    mode: 0755
+
+- name: Run fencing configuration script
+  shell: sudo bash /root/fencing_script.sh
+
+- name: Remove fencing configuration script
+  file:
+    state: absent
+    path: /root/fencing_script.sh
+
+- name: Enable cluster
+  command: sudo pcs cluster enable --all
+
+- name: Start cluster
+  command: sudo pcs cluster start --all
+
+- name: Set no-quorum-policy freeze
+  command: sudo pcs property set no-quorum-policy=freeze
+
+- name: Enable stonith
+  command: sudo pcs property set stonith-enabled=true
+
+- name: Create resource dlm
+  command: sudo pcs resource create dlm ocf:pacemaker:controld op monitor interval=30s on-fail=fence clone interleave=true ordered=true
+
+- name: Create resource clvmd
+  command: sudo pcs resource create clvmd ocf:heartbeat:clvm op monitor interval=30s on-fail=fence clone interleave=true ordered=true
+
+- name: Create constraint order
+  command: sudo pcs constraint order start dlm-clone then clvmd-clone
+
+- name: Create constraint colocation
+  command: sudo pcs constraint colocation add clvmd-clone with dlm-clone
+
+- include: add-disk.yml
+  when: inventory_hostname in groups['head_worker']
+
+- name: Create resource gfs2fs
+  command: sudo pcs resource create gfs2fs Filesystem device="/dev/{{ name_of_vg }}/{{ name_of_lv }}" directory="{{ folder_name }}" fstype=gfs2 options=noatime op monitor interval=10s on-fail=fence clone interleave=true
+
+- name: Create constraint order
+  command: sudo pcs constraint order start clvmd-clone then gfs2fs-clone
+
+- name: Create constraint colocation
+  command: sudo pcs constraint colocation add gfs2fs-clone with clvmd-clone

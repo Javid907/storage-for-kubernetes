@@ -1,0 +1,30 @@
+---
+- name: Check Disk Has or not
+  stat:
+    path: "{{ disk_name }}"
+  register: file_details
+
+- name: Create a physical volume group on top of your disk
+  command: sudo pvcreate {{ disk_name }}
+
+- name: Create a volume group on top of your disk
+  lvg:
+    vg: "{{ name_of_vg }}"
+    pvs: "{{ disk_name }}"
+
+- name: Create a logical group
+  lvol:
+    vg: "{{ name_of_vg }}"
+    lv: "{{ name_of_lv }}"
+    size: +100%FREE
+
+- name: Create a gfs2 filesystem on logical volume
+  shell: yes | sudo mkfs.gfs2 -j3 -p lock_dlm -t {{ cluster_name }}:gfs2fs /dev/{{ name_of_vg }}/{{ name_of_lv }}
+
+- name: Create your directory
+  file:
+    path: /{{ folder_name }}
+    state: directory
+
+- name: Mount device to folder
+  command: mount /dev/{{ name_of_vg }}/{{ name_of_lv }} /{{ folder_name }}

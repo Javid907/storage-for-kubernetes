@@ -1,0 +1,22 @@
+the_vars_file.write('ansible_user: ssh_username\n')
+the_vars_file.write('ansible_password: ssh_password\n')
+the_vars_file.write('ansible_port: ssh_port\n')
+the_vars_file.write('ansible_become: yes\n')
+the_vars_file.write('ansible_become_method: sudo\n')
+the_vars_file.write('ansible_become_pass: ' ansible_become_pass' \n')
+the_vars_file.write('####################
+the_vars_file.write('
+the_vars_file.write('password_hash: password_hash
+the_vars_file.write('disk_name: disk_name
+the_vars_file.write('name_of_vg: name_of_vg
+the_vars_file.write('name_of_lv: name_of_lv
+
+the_vars_file.write('folder_name: folder_name
+the_vars_file.write('cluster_name: cluster_name
+the_vars_file.write('hacluster_user: hacluster_user
+the_vars_file.write('hacluster_user_password: hacluster_user_password
+the_vars_file.write('worker_list: worker_list
+the_vars_file.write('worker_ip_list: worker_ip_list
+the_vars_file.write('vcenter_ip: vcenter_ip
+the_vars_file.write('vcenter_user: vcenter_user
+the_vars_file.write('vcenter_password: vcenter_password

@@ -1,0 +1,23 @@
+#!/bin/bash
+
+worker_list="{{ worker_list }}"
+worker_ip_list="{{ worker_ip_list }}"
+
+for ip in $worker_ip_list; do
+   echo $ip >> /root/list1
+done
+
+for instance in $worker_list; do
+   echo $instance >> /root/list2
+done
+
+
+a=$(wc -l /root/list1 | awk '{print$1}')
+for((i=1; i<=$a; i++))
+do
+name2=$(head -n $i /root/list1| tail -n 1)
+name1=$(head -n $i /root/list2| tail -n 1)
+echo "$name2 $name1" >> /etc/hosts
+done
+
+rm -rf /root/list*
