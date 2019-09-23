@@ -19,6 +19,7 @@ data_worker_list = worker_list.split()
 head_worker = input("Please type name of first worker: ")
 add_share = input("Will you add shared disk in vcenter(yes/no)? ")
 if add_share == "yes" or add_share == "y" or add_share == "Y" or add_share == "YES" or add_share == "Yes":
+    mkdir = 'mkdir add-share-disk/group_vars'
     cp_1 = 'cp add-share-disk/esxi-role-change-vmx/tasks/main.orig add-share-disk/esxi-role-change-vmx/tasks/main.yaml'
     cp_2 = 'cp add-share-disk/vcenter-poweroff-workers/tasks/main.orig add-share-disk/vcenter-poweroff-workers/tasks/main.yaml'
     cp_3 = 'cp add-share-disk/vcenter-poweron-workers/tasks/main.orig add-share-disk/vcenter-poweron-workers/tasks/main.yaml'
@@ -31,6 +32,7 @@ if add_share == "yes" or add_share == "y" or add_share == "Y" or add_share == "Y
     os.system(cp_4)
     os.system(cp_5)
     os.system(cp_6)
+    os.system(mkdir)
 
 
 

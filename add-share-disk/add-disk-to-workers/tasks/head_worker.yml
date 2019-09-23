@@ -6,7 +6,7 @@
     validate_certs: no
     name: "{{ head_worker }}"
     disk:
-      - size: "{{ disk_size }}"
+      - size_gb: "{{ disk_size }}"
         type: eagerzeroedthick
         state: present
         autoselect_datastore: True
