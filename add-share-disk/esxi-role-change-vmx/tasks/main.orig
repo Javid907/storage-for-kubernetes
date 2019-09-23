@@ -1,0 +1,5 @@
+- name: Change line in workers-vmx file
+  lineinfile:
+      path: "{{ vmx_path }}/{{ datastore }}/{{ item.worker }}/{{ item.worker_vmx }}.vmx"
+      line: scsi1.sharedBus = "physical"
+      state: present

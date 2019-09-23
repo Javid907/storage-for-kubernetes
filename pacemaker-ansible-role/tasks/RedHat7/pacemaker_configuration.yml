@@ -47,7 +47,7 @@
   when: inventory_hostname in groups['head_worker']
 
 - name: Create resource gfs2fs
-  command: sudo pcs resource create gfs2fs Filesystem device="/dev/{{ name_of_vg }}/{{ name_of_lv }}" directory="{{ folder_name }}" fstype=gfs2 options=noatime op monitor interval=10s on-fail=fence clone interleave=true
+  command: sudo pcs resource create gfs2fs Filesystem device="/dev/{{ name_of_vg }}/{{ name_of_lv }}" directory="/{{ folder_name }}" fstype=gfs2 options=noatime op monitor interval=10s on-fail=fence clone interleave=true
 
 - name: Create constraint order
   command: sudo pcs constraint order start clvmd-clone then gfs2fs-clone

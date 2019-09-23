@@ -1,0 +1,5 @@
+---
+- include: head_worker.yml
+- include: secondary_worker.yml
+- include: change_vmx_file_1.yml
+- include: change_vmx_file_2.yml

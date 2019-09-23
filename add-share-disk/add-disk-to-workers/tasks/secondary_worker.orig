@@ -1,0 +1,14 @@
+- name: Add disks to virtual machine
+  vmware_guest_disk:
+    hostname: "{{ vcenter_hostname }}"
+    username: "{{ vcenter_username }}"
+    password: "{{ vcenter_password }}"
+    validate_certs: no
+    name: "{{ item }}"
+    disk:
+      - size: "{{ disk_size }}"
+        type: eagerzeroedthick
+        state: present
+        autoselect_datastore: True
+        scsi_controller: 1
+        unit_number: 0

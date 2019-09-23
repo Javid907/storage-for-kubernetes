@@ -1,0 +1,39 @@
+---
+  - name: Poweroff kubernetes workers
+    hosts: localhost
+    gather_facts: false
+    connection: local
+    become: true
+    vars_files:
+      - "add-share-disk/group_vars/all.yaml"
+    roles:
+     - role: add-share-disk/vcenter-poweroff-workers
+
+  - name: Add disk kubernetes workers
+    hosts: localhost
+    gather_facts: false
+    connection: local
+    become: true
+    vars_files:
+      - "add-share-disk/group_vars/all.yaml"
+    roles:
+     - role: add-share-disk/add-disk-to-workers
+
+  - name: Change scsi_bus_sharing in folders inside esxi
+    hosts: esxi
+    gather_facts: false
+    become: true
+    vars_files:
+      - "add-share-disk/group_vars/all.yaml"
+    roles:
+     - role: add-share-disk/esxi-role-change-vmx
+
+  - name: Poweron kubernetes workers
+    hosts: localhost
+    gather_facts: false
+    connection: local
+    become: true
+    vars_files:
+      - "add-share-disk/group_vars/all.yaml"
+    roles:
+     - role: add-share-disk/vcenter-poweron-workers

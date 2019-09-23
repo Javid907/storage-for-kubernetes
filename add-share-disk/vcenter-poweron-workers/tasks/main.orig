@@ -1,0 +1,8 @@
+  - name: Poweron all kubernetes workers
+    vmware_guest_powerstate:
+        hostname: "{{ vcenter_hostname }}"
+        username: "{{ vcenter_username }}"
+        password: "{{ vcenter_password }}"
+        name: "{{ item }}"
+        state: powered-on
+        validate_certs: no
