@@ -3,7 +3,7 @@ print('''
 Requiments Packages:
 Python - 3.6
 module passlib
-ansible(min 2.7)
+ansible(min 2.8)
 .....
 '''
 )
@@ -42,6 +42,7 @@ if add_share == "yes" or add_share == "y" or add_share == "Y" or add_share == "Y
     vcenter_password = getpass.getpass("Please type password of Administrator for VCenter: ")
     vmx_path = "/vmfs/volumes/"
     datastore = input("Please type name of Datastore: ")
+    datacenter_name = input("Please type name of Datacenter: ")
     ansible_connection = "ssh"
     ansible_user = "root"
     ansible_root_pass = getpass.getpass("Please type password of root for ESXI: ")
@@ -55,6 +56,7 @@ if add_share == "yes" or add_share == "y" or add_share == "Y" or add_share == "Y
         the_group_vars_file.write('datastore: ' + datastore + ' \n')
         the_group_vars_file.write('disk_size: ' + disk_size + ' \n')
         the_group_vars_file.write('head_worker: ' + head_worker + ' \n')
+        the_group_vars_file.write('datacenter_name: ' + datacenter_name + ' \n')
         number = 0
         for worker in data_worker_list:
             number = number + 1
@@ -96,12 +98,13 @@ if add_share == "yes" or add_share == "y" or add_share == "Y" or add_share == "Y
 
     with open('add-share-disk/add-disk-to-workers/tasks/secondary_worker.yml', 'a+') as the_secondary_worker:
         the_secondary_worker.write('  with_items:\n')
-        number = 0
+        number = 1
         for worker in data_worker_list:
             if worker != head_worker:
                 number = number + 1
                 the_secondary_worker.write('        - "{{ worker' + str(number) + ' }}"\n')
         the_secondary_worker.write('  delegate_to: localhost\n')
+        the_secondary_worker.write('  register: disk_facts\n')
 
     with open('add-share-disk/add-disk-to-workers/tasks/change_vmx_file_1.yml', 'a+') as the_change_vmx_file_1:
         the_change_vmx_file_1.write('  with_items:\n')

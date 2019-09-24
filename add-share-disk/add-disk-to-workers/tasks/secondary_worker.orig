@@ -3,12 +3,13 @@
     hostname: "{{ vcenter_hostname }}"
     username: "{{ vcenter_username }}"
     password: "{{ vcenter_password }}"
+    datacenter: "{{ datacenter_name }}"
     validate_certs: no
     name: "{{ item }}"
     disk:
-      - size_gb: "{{ disk_size }}"
+      - filename: "[{{ datastore }}] {{ head_worker }}/{{ head_worker }}.vmdk"
         type: eagerzeroedthick
         state: present
-        autoselect_datastore: True
+        datastore: "{{ datastore }}"
         scsi_controller: 1
         unit_number: 0

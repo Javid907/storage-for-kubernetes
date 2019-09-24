@@ -3,13 +3,15 @@
     hostname: "{{ vcenter_hostname }}"
     username: "{{ vcenter_username }}"
     password: "{{ vcenter_password }}"
+    datacenter: "{{ datacenter_name }}"
     validate_certs: no
     name: "{{ head_worker }}"
     disk:
       - size_gb: "{{ disk_size }}"
         type: eagerzeroedthick
         state: present
-        autoselect_datastore: True
+        datastore: "{{ datastore }}"
         scsi_controller: 1
         unit_number: 0
   delegate_to: localhost
+  register: disk_facts
